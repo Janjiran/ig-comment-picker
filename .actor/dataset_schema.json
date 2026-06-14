@@ -1,0 +1,22 @@
+{
+    "actorSpecification": 1,
+    "views": {
+        "winners": {
+            "title": "Winners",
+            "transformation": {
+                "fields": ["winnerRank", "ownerUsername", "text", "postUrl", "commentUrl", "timestamp"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "winnerRank": { "label": "#", "format": "number" },
+                    "ownerUsername": { "label": "Username", "format": "text" },
+                    "text": { "label": "Comment", "format": "text" },
+                    "postUrl": { "label": "Post URL", "format": "link" },
+                    "commentUrl": { "label": "Comment URL", "format": "link" },
+                    "timestamp": { "label": "Commented at", "format": "text" }
+                }
+            }
+        }
+    }
+}

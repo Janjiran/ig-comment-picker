@@ -1,0 +1,16 @@
+{
+    "actorSpecification": 1,
+    "name": "instagram-comment-picker",
+    "title": "Instagram Comment Winner Picker",
+    "description": "Scrapes comments from Instagram posts/reels and randomly picks a user-defined number of winners. Ideal for giveaways.",
+    "version": "0.1",
+    "buildTag": "latest",
+    "meta": {
+        "templateId": "ts-start"
+    },
+    "input": "./input_schema.json",
+    "dockerfile": "../Dockerfile",
+    "storages": {
+        "dataset": "./dataset_schema.json"
+    }
+}

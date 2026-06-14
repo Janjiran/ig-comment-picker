@@ -1,0 +1,53 @@
+{
+    "title": "Instagram Comment Winner Picker",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "postUrls": {
+            "title": "Instagram post URLs",
+            "type": "array",
+            "description": "One or more Instagram post or reel URLs to collect comments from. Comments are pooled across all posts before the draw.",
+            "editor": "stringList",
+            "prefill": ["https://www.instagram.com/p/SHORTCODE/"],
+            "example": ["https://www.instagram.com/p/DN8-GjPkgjS/"]
+        },
+        "numberOfWinners": {
+            "title": "Number of winners",
+            "type": "integer",
+            "description": "How many winning comments to randomly pick from the eligible pool.",
+            "editor": "number",
+            "default": 1,
+            "minimum": 1,
+            "unit": "winners"
+        },
+        "maxCommentsPerPost": {
+            "title": "Max comments per post",
+            "type": "integer",
+            "description": "Maximum number of comments to scrape per post URL (passed to the Instagram Comment Scraper as resultsLimit). Higher values cost more.",
+            "editor": "number",
+            "default": 100,
+            "minimum": 1,
+            "unit": "comments"
+        },
+        "uniqueUsers": {
+            "title": "Unique users only",
+            "type": "boolean",
+            "description": "If enabled, each Instagram user can win at most once even if they commented multiple times. The first comment per user is kept.",
+            "default": true
+        },
+        "requireMention": {
+            "title": "Must mention/tag someone",
+            "type": "boolean",
+            "description": "If enabled, only comments that tag at least one other account (e.g. @friend) are eligible. Common giveaway rule.",
+            "default": false
+        },
+        "requiredKeyword": {
+            "title": "Required keyword / hashtag",
+            "type": "string",
+            "description": "If set, only comments containing this keyword or hashtag (case-insensitive) are eligible.",
+            "editor": "textfield",
+            "nullable": true
+        }
+    },
+    "required": ["postUrls", "numberOfWinners"]
+}
