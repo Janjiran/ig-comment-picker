@@ -1,9 +1,9 @@
-# Instagram Comment Picker 🎉 — Free & Fair Giveaway Winner Generator
+# Instagram Comment Picker 🎉 - Free & Fair Giveaway Winner Generator
 
 **Pick a random winner from your Instagram comments in seconds.** This Instagram
 comment picker (a.k.a. Instagram giveaway picker / random comment winner generator)
 reads all the comments on any Instagram **post or reel**, applies the giveaway rules
-you choose, and randomly draws one or more winners for you — no manual scrolling,
+you choose, and randomly draws one or more winners for you - no manual scrolling,
 copy‑pasting, or screenshots required.
 
 Perfect for **Instagram giveaways, contests, raffles, and prize draws** run by
@@ -18,11 +18,11 @@ and fair way to choose a winner.
 
 ## What you can use it for
 
-- 🎁 **Instagram giveaway winner picker** — draw a fair winner from comments.
-- 🏆 **Contest & raffle draws** — pick multiple winners at once.
-- 🤝 **"Tag a friend" promotions** — only count comments that tag someone.
-- #️⃣ **Hashtag / keyword campaigns** — only count comments containing your keyword.
-- 📊 **Comment exports** — get a clean list of everyone who commented.
+- 🎁 **Instagram giveaway winner picker** - draw a fair winner from comments.
+- 🏆 **Contest & raffle draws** - pick multiple winners at once.
+- 🤝 **"Tag a friend" promotions** - only count comments that tag someone.
+- #️⃣ **Hashtag / keyword campaigns** - only count comments containing your keyword.
+- 📊 **Comment exports** - get a clean list of everyone who commented.
 
 ## How to pick a winner in 3 steps
 
@@ -33,7 +33,7 @@ and fair way to choose a winner.
 3. **Click Start.** In under a minute you get your randomly drawn winner(s), ready to
    announce. Download them as Excel/CSV/JSON or copy them straight from the table.
 
-That's it — no login to your Instagram account needed.
+That's it - no login to your Instagram account needed.
 
 ## Settings explained (in plain English)
 
@@ -42,7 +42,7 @@ That's it — no login to your Instagram account needed.
 | **Instagram post URLs** | The post(s) or reel(s) you're running the giveaway on. You can add several and the comments are combined into one pool. |
 | **Number of winners** | How many winners to randomly draw. |
 | **Max comments per post** | How many comments to read per post. Higher = more thorough (and slightly more credits). |
-| **Unique users only** | On by default — the same person can't win twice, even if they commented many times. |
+| **Unique users only** | On by default - the same person can't win twice, even if they commented many times. |
 | **Must mention/tag someone** | Only count comments that tag a friend (e.g. `@bestie`). Great for "tag a friend" rules. |
 | **Required keyword / hashtag** | Only count comments that include your word or hashtag (e.g. `#giveaway`). |
 
@@ -62,9 +62,9 @@ That's it — no login to your Instagram account needed.
 ## What you get (results)
 
 - A **Winners** table with each winner's username, their comment, the post link, and
-  when they commented — exportable to **Excel, CSV, JSON, or HTML**.
+  when they commented - exportable to **Excel, CSV, JSON, or HTML**.
 - A summary record (`OUTPUT`) with the winners plus useful stats: total comments read,
-  how many were eligible after your rules, and the settings used — handy proof that the
+  how many were eligible after your rules, and the settings used - handy proof that the
   draw was fair.
 
 ## 🤖 Use it with AI assistants (ChatGPT, Claude & others)
@@ -93,7 +93,7 @@ assistant can discover this Instagram comment picker and call it directly.
 **Try a prompt like:**
 
 > "Use the Instagram Comment Picker Actor to draw 2 random winners from the comments on
-> https://www.instagram.com/reel/ABC123/ — only count comments that tag a friend."
+> https://www.instagram.com/reel/ABC123/ - only count comments that tag a friend."
 
 The assistant will run the Actor and hand back the winners. (Get your token from the
 [Apify Console → Settings → Integrations](https://console.apify.com/account/integrations).)
@@ -106,17 +106,17 @@ comment has an equal chance. The result includes the comment count and rules use
 you can show your audience the draw was unbiased.
 
 **Can I pick more than one winner?**
-Yes — set **Number of winners** to any amount. You can also keep it fair by leaving
+Yes - set **Number of winners** to any amount. You can also keep it fair by leaving
 **Unique users only** on, so one person can't take multiple prizes.
 
 **Does it work on Reels as well as photo posts?**
-Yes — it works on Instagram **posts and reels**.
+Yes - it works on Instagram **posts and reels**.
 
 **Do I need to log in to Instagram?**
 No. You only provide the public post link.
 
 **Can I require people to tag a friend or use a hashtag?**
-Yes — turn on **Must mention/tag someone** and/or set a **Required keyword/hashtag**.
+Yes - turn on **Must mention/tag someone** and/or set a **Required keyword/hashtag**.
 
 **Is it free?**
 The Actor itself is lightweight, but it reads comments via Apify's official Instagram
@@ -140,18 +140,18 @@ to collect comments, then filters and randomly draws winners.
 
 | Field | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
-| `postUrls` | `string[]` | ✅ | — | Instagram post/reel URLs. Comments are pooled across all of them. |
+| `postUrls` | `string[]` | ✅ | - | Instagram post/reel URLs. Comments are pooled across all of them. |
 | `numberOfWinners` | `integer` | ✅ | `1` | How many winners to randomly pick. |
-| `maxCommentsPerPost` | `integer` | — | `100` | Max comments scraped per post (passed as `resultsLimit`). |
-| `uniqueUsers` | `boolean` | — | `true` | Each username can win at most once (first comment per user is kept). |
-| `requireMention` | `boolean` | — | `false` | Only comments tagging another account (`@someone`) are eligible. |
-| `requiredKeyword` | `string` | — | — | Only comments containing this keyword/hashtag (case‑insensitive) are eligible. |
+| `maxCommentsPerPost` | `integer` | - | `100` | Max comments scraped per post (passed as `resultsLimit`). |
+| `uniqueUsers` | `boolean` | - | `true` | Each username can win at most once (first comment per user is kept). |
+| `requireMention` | `boolean` | - | `false` | Only comments tagging another account (`@someone`) are eligible. |
+| `requiredKeyword` | `string` | - | - | Only comments containing this keyword/hashtag (case‑insensitive) are eligible. |
 
 ### Output
 
-- **Default dataset** — one record per winner (`winnerRank`, `ownerUsername`, `text`,
+- **Default dataset** - one record per winner (`winnerRank`, `ownerUsername`, `text`,
   `postUrl`, `commentUrl`, `timestamp`, …).
-- **Key‑value store `OUTPUT`** — summary: `winners`, `totalComments`, `eligibleCount`,
+- **Key‑value store `OUTPUT`** - summary: `winners`, `totalComments`, `eligibleCount`,
   the applied `filters`, and the input `postUrls`.
 
 ### Run locally
