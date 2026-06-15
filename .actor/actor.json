@@ -1,8 +1,8 @@
 {
     "actorSpecification": 1,
     "name": "instagram-comment-picker",
-    "title": "Instagram Comment Winner Picker",
-    "description": "Scrapes comments from Instagram posts/reels and randomly picks a user-defined number of winners. Ideal for giveaways.",
+    "title": "Instagram Comment Picker - Giveaway Winner Generator",
+    "description": "Pick a random winner from Instagram comments on any post or reel. Free, fair giveaway/contest winner picker: set the number of winners, require tagging a friend or a hashtag, and export the results. Works for AI assistants too.",
     "version": "0.1",
     "buildTag": "latest",
     "meta": {
