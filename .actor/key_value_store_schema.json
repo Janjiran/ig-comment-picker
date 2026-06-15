@@ -1,0 +1,12 @@
+{
+    "actorKeyValueStoreSchemaVersion": 1,
+    "title": "Instagram Comment Picker files",
+    "collections": {
+        "summary": {
+            "title": "Run summary",
+            "description": "The OUTPUT record: winners and run statistics in JSON.",
+            "keyPrefix": "OUTPUT",
+            "contentTypes": ["application/json"]
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Instagram Comment Picker output",
+    "properties": {
+        "winners": {
+            "type": "string",
+            "title": "🏆 Winners",
+            "description": "The randomly selected winning comments, ready to announce.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=winners"
+        },
+        "summary": {
+            "type": "string",
+            "title": "Run summary",
+            "description": "Winners plus stats: total comments read, how many were eligible after your rules, and the filters applied — proof the draw was fair.",
+            "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/OUTPUT"
+        }
+    }
+}
