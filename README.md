@@ -119,7 +119,7 @@ No. You only provide the public post link.
 Yes - turn on **Must mention/tag someone** and/or set a **Required keyword/hashtag**.
 
 **Is it free?**
-The Actor itself is lightweight, but it reads comments via Apify's official Instagram
+The Actor itself is lightweight, but it reads comments via a dedicated Instagram
 comment scraper, which uses a small amount of Apify platform credits per run. New Apify
 accounts include free monthly usage to get started.
 
@@ -143,7 +143,7 @@ normalised, so it works even if the scraper labels comment fields differently.
 | --- | --- | --- | --- | --- |
 | `postUrls` | `string[]` | ✅ | - | Instagram post/reel URLs. Comments are pooled across all of them. |
 | `numberOfWinners` | `integer` | ✅ | `1` | How many winners to randomly pick. |
-| `maxCommentsPerPost` | `integer` | - | `100` | Max comments scraped per post (passed as `resultsLimit`). |
+| `maxCommentsPerPost` | `integer` | - | `100` | Max comments scraped per post. |
 | `uniqueUsers` | `boolean` | - | `true` | Each username can win at most once (first comment per user is kept). |
 | `requireMention` | `boolean` | - | `false` | Only comments tagging another account (`@someone`) are eligible. |
 | `requiredKeyword` | `string` | - | - | Only comments containing this keyword/hashtag (case‑insensitive) are eligible. |
