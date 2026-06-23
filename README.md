@@ -132,9 +132,10 @@ slightly from your logged‑in view (some replies/filtered comments may not appe
 ## For developers
 
 This is an [Apify Actor](https://apify.com/actors) written in **TypeScript**. It calls
-Apify's official
-[`apify/instagram-comment-scraper`](https://apify.com/apify/instagram-comment-scraper)
-to collect comments, then filters and randomly draws winners.
+a dedicated Instagram comment scraper Actor on Apify (configurable via
+`COMMENT_SCRAPER_ACTOR_ID` in `src/main.ts`) to collect comments — with no free-tier
+comment cap — then filters and randomly draws winners. The scraper's output fields are
+normalised, so it works even if the scraper labels comment fields differently.
 
 ### Input schema
 

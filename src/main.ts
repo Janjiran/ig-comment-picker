@@ -2,11 +2,46 @@ import { Actor, log } from 'apify';
 
 import type { Input, ScrapedComment, Winner } from './types.js';
 
-/** Actor ID of Apify's official Instagram Comment Scraper. */
-const COMMENT_SCRAPER_ACTOR_ID = 'apify/instagram-comment-scraper';
+/**
+ * ID of the Instagram comment scraper this Actor delegates to. Unlike the free
+ * tier of `apify/instagram-comment-scraper` (capped at ~15 comments), this one
+ * can scrape an unlimited number of comments. It accepts `{ postUrls, maxCommentsPerPost }`.
+ */
+const COMMENT_SCRAPER_ACTOR_ID = 'aY8DKpgIDJq2ZVcwP';
 
 /** Matches an Instagram-style mention, e.g. "@friend_01" or "@some.user". */
 const MENTION_REGEX = /@[A-Za-z0-9._]+/;
+
+/** First non-empty trimmed string value found across the given keys of a record. */
+function pickString(raw: Record<string, unknown>, keys: string[]): string {
+    for (const key of keys) {
+        const value = raw[key];
+        if (typeof value === 'string' && value.trim()) return value.trim();
+    }
+    return '';
+}
+
+/**
+ * Maps a raw comment from the scraper to our canonical shape. Comment scrapers
+ * label fields differently (e.g. `text` vs `comment`, `ownerUsername` vs
+ * `username`), so we probe the common variants and keep the original fields too.
+ */
+function normalizeComment(raw: ScrapedComment): ScrapedComment {
+    const r = raw as Record<string, unknown>;
+    const owner = (r.owner ?? r.user ?? {}) as Record<string, unknown>;
+    return {
+        ...raw,
+        text: pickString(r, ['text', 'commentText', 'comment', 'message', 'body', 'content']),
+        ownerUsername:
+            pickString(r, ['ownerUsername', 'username', 'ownerUserName', 'author', 'authorName', 'ownerName'])
+            || pickString(owner, ['username', 'userName', 'name']),
+        timestamp: pickString(r, ['timestamp', 'createdAt', 'created_at', 'time', 'date', 'takenAt']),
+        commentUrl: pickString(r, ['commentUrl', 'permalink', 'commentLink']),
+        postUrl: pickString(r, ['postUrl', 'inputUrl', 'postUrlInput', 'url']),
+        ownerProfilePicUrl: pickString(r, ['ownerProfilePicUrl', 'profilePicUrl', 'profile_pic_url'])
+            || pickString(owner, ['profilePicUrl', 'profile_pic_url']),
+    };
+}
 
 /** Fisher–Yates in-place shuffle, returning a new shuffled array. */
 function shuffle<T>(input: readonly T[]): T[] {
@@ -41,9 +76,9 @@ try {
         throw new Error('Input "numberOfWinners" must be an integer >= 1.');
     }
 
-    const directUrls = postUrls.map((u) => u.trim()).filter(Boolean);
+    const cleanedUrls = postUrls.map((u) => u.trim()).filter(Boolean);
     log.info('Starting Instagram Comment Winner Picker', {
-        postCount: directUrls.length,
+        postCount: cleanedUrls.length,
         numberOfWinners,
         maxCommentsPerPost,
         uniqueUsers,
@@ -51,11 +86,11 @@ try {
         requiredKeyword: requiredKeyword || null,
     });
 
-    // --- Scrape comments via the official Apify Actor ---------------------
-    log.info(`Calling "${COMMENT_SCRAPER_ACTOR_ID}" to scrape comments...`);
+    // --- Scrape comments via the configured Apify scraper Actor -----------
+    log.info(`Calling comment scraper "${COMMENT_SCRAPER_ACTOR_ID}"...`);
     const run = await Actor.call(COMMENT_SCRAPER_ACTOR_ID, {
-        directUrls,
-        resultsLimit: maxCommentsPerPost,
+        postUrls: cleanedUrls,
+        maxCommentsPerPost,
     });
 
     if (!run || run.status !== 'SUCCEEDED') {
@@ -63,8 +98,18 @@ try {
     }
 
     const { items } = await Actor.apifyClient.dataset(run.defaultDatasetId).listItems();
-    const comments = items as unknown as ScrapedComment[];
+    const comments = (items as unknown as ScrapedComment[]).map(normalizeComment);
     log.info(`Scraper returned ${comments.length} comment(s).`);
+
+    // Diagnostic: if comments came back but none have a usable text/username,
+    // the scraper likely uses field names we don't recognise — surface them.
+    if (comments.length > 0 && !comments.some((c) => c.text && c.ownerUsername)) {
+        log.warning(
+            'Comments were returned but none had a recognisable text + username. The scraper\'s '
+            + 'output field names may be unexpected. Keys of the first item: '
+            + Object.keys(items[0] ?? {}).join(', '),
+        );
+    }
 
     if (comments.length === 0) {
         log.warning(
@@ -75,7 +120,7 @@ try {
             winners: [],
             totalComments: 0,
             eligibleCount: 0,
-            postUrls: directUrls,
+            postUrls: cleanedUrls,
         });
         await Actor.exit('Finished: no comments found.');
     }
@@ -108,7 +153,7 @@ try {
             winners: [],
             totalComments: comments.length,
             eligibleCount: 0,
-            postUrls: directUrls,
+            postUrls: cleanedUrls,
         });
         await Actor.exit('Finished: no eligible comments.');
     }
@@ -138,7 +183,7 @@ try {
         totalComments: comments.length,
         eligibleCount: eligible.length,
         numberOfWinners: winners.length,
-        postUrls: directUrls,
+        postUrls: cleanedUrls,
         filters: { uniqueUsers, requireMention, requiredKeyword: requiredKeyword || null },
     });
 

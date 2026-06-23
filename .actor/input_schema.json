@@ -23,7 +23,7 @@
         "maxCommentsPerPost": {
             "title": "Max comments per post",
             "type": "integer",
-            "description": "Maximum number of comments to scrape per post URL (passed to the Instagram Comment Scraper as resultsLimit). Higher values cost more.",
+            "description": "Maximum number of comments to scrape per post URL. Higher values are more thorough but cost slightly more.",
             "editor": "number",
             "default": 100,
             "minimum": 1,
