@@ -3,11 +3,11 @@ import { Actor, log } from 'apify';
 import type { Input, ScrapedComment, Winner } from './types.js';
 
 /**
- * ID of the Instagram comment scraper this Actor delegates to. Unlike the free
- * tier of `apify/instagram-comment-scraper` (capped at ~15 comments), this one
- * can scrape an unlimited number of comments. It accepts `{ postUrls, maxCommentsPerPost }`.
+ * The Instagram comment scraper this Actor delegates to. Unlike the free tier of
+ * `apify/instagram-comment-scraper` (capped at ~15 comments), this one scrapes an
+ * unlimited number of comments. It accepts `{ postUrls, maxCommentsPerPost }`.
  */
-const COMMENT_SCRAPER_ACTOR_ID = 'aY8DKpgIDJq2ZVcwP';
+const COMMENT_SCRAPER_ACTOR_ID = 'clappi/instagram-comments-scraper';
 
 /** Matches an Instagram-style mention, e.g. "@friend_01" or "@some.user". */
 const MENTION_REGEX = /@[A-Za-z0-9._]+/;
@@ -21,25 +21,43 @@ function pickString(raw: Record<string, unknown>, keys: string[]): string {
     return '';
 }
 
+/** Resolve a timestamp to an ISO string, accepting ISO strings or unix epoch (s or ms). */
+function pickTimestamp(raw: Record<string, unknown>): string {
+    const iso = pickString(raw, ['createdAtISO', 'timestamp', 'created_at', 'time', 'date']);
+    if (iso) return iso;
+    for (const key of ['createdAt', 'takenAt', 'timestamp']) {
+        const value = raw[key];
+        if (typeof value === 'number' && value > 0) {
+            const ms = value < 1e12 ? value * 1000 : value; // seconds -> ms
+            return new Date(ms).toISOString();
+        }
+    }
+    return '';
+}
+
 /**
- * Maps a raw comment from the scraper to our canonical shape. Comment scrapers
- * label fields differently (e.g. `text` vs `comment`, `ownerUsername` vs
- * `username`), so we probe the common variants and keep the original fields too.
+ * Maps a raw comment from the scraper to our canonical shape. The owner can be a
+ * nested object (`author`/`owner`/`user`) or flat fields, and scrapers label things
+ * differently, so we probe the common variants and keep the original fields too.
  */
 function normalizeComment(raw: ScrapedComment): ScrapedComment {
     const r = raw as Record<string, unknown>;
-    const owner = (r.owner ?? r.user ?? {}) as Record<string, unknown>;
+    const author = (r.author ?? r.owner ?? r.user ?? {}) as Record<string, unknown>;
     return {
         ...raw,
         text: pickString(r, ['text', 'commentText', 'comment', 'message', 'body', 'content']),
         ownerUsername:
-            pickString(r, ['ownerUsername', 'username', 'ownerUserName', 'author', 'authorName', 'ownerName'])
-            || pickString(owner, ['username', 'userName', 'name']),
-        timestamp: pickString(r, ['timestamp', 'createdAt', 'created_at', 'time', 'date', 'takenAt']),
+            pickString(author, ['username', 'userName', 'handle'])
+            || pickString(r, ['ownerUsername', 'username', 'ownerUserName', 'authorName', 'ownerName']),
+        ownerFullName:
+            pickString(author, ['fullName', 'full_name', 'name'])
+            || pickString(r, ['ownerFullName', 'fullName']),
+        timestamp: pickTimestamp(r),
         commentUrl: pickString(r, ['commentUrl', 'permalink', 'commentLink']),
         postUrl: pickString(r, ['postUrl', 'inputUrl', 'postUrlInput', 'url']),
-        ownerProfilePicUrl: pickString(r, ['ownerProfilePicUrl', 'profilePicUrl', 'profile_pic_url'])
-            || pickString(owner, ['profilePicUrl', 'profile_pic_url']),
+        ownerProfilePicUrl:
+            pickString(author, ['profilePicUrl', 'profile_pic_url'])
+            || pickString(r, ['ownerProfilePicUrl', 'profilePicUrl', 'profile_pic_url']),
     };
 }
 

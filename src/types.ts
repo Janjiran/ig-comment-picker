@@ -4,7 +4,7 @@ export interface Input {
     postUrls: string[];
     /** How many winners to randomly pick from the eligible pool. */
     numberOfWinners: number;
-    /** Max comments to scrape per post (passed to the scraper as resultsLimit). */
+    /** Max comments to scrape per post. */
     maxCommentsPerPost?: number;
     /** Keep only the first comment per username when true. */
     uniqueUsers?: boolean;
@@ -15,21 +15,22 @@ export interface Input {
 }
 
 /**
- * Shape of a single comment as returned by the `apify/instagram-comment-scraper`
- * Actor's dataset. Fields are optional because the upstream output can vary.
+ * Canonical shape of a single comment after normalization. Fields are optional
+ * because the upstream scraper output can vary; the index signature preserves any
+ * extra raw fields (e.g. `likes`, `childCommentCount`, `id`).
  */
 export interface ScrapedComment {
     id?: string;
     text?: string;
     ownerUsername?: string;
+    ownerFullName?: string;
     ownerProfilePicUrl?: string;
     timestamp?: string;
-    /** URL of the post the comment belongs to (named `postUrl` in upstream output). */
+    /** URL of the post the comment belongs to. */
     postUrl?: string;
     /** Direct link to the comment, when available. */
     commentUrl?: string;
-    repliesCount?: number;
-    likesCount?: number;
+    likes?: number;
     [key: string]: unknown;
 }
 

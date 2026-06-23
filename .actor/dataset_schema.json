@@ -4,16 +4,17 @@
         "winners": {
             "title": "Winners",
             "transformation": {
-                "fields": ["winnerRank", "ownerUsername", "text", "postUrl", "commentUrl", "timestamp"]
+                "fields": ["winnerRank", "ownerUsername", "ownerFullName", "text", "likes", "postUrl", "timestamp"]
             },
             "display": {
                 "component": "table",
                 "properties": {
                     "winnerRank": { "label": "#", "format": "number" },
                     "ownerUsername": { "label": "Username", "format": "text" },
+                    "ownerFullName": { "label": "Name", "format": "text" },
                     "text": { "label": "Comment", "format": "text" },
+                    "likes": { "label": "Likes", "format": "number" },
                     "postUrl": { "label": "Post URL", "format": "link" },
-                    "commentUrl": { "label": "Comment URL", "format": "link" },
                     "timestamp": { "label": "Commented at", "format": "text" }
                 }
             }
