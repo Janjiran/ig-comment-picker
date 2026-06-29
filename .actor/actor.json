@@ -8,6 +8,13 @@
     "meta": {
         "templateId": "ts-start"
     },
+    "defaultRunOptions": {
+        "memoryMbytes": 512,
+        "timeoutSecs": 600
+    },
+    "environmentVariables": {
+        "REVEAL_INGEST_SECRET": "@revealIngestSecret"
+    },
     "input": "./input_schema.json",
     "output": "./output_schema.json",
     "dockerfile": "../Dockerfile",

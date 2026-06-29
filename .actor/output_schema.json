@@ -2,6 +2,12 @@
     "actorOutputSchemaVersion": 1,
     "title": "Instagram Comment Picker output",
     "properties": {
+        "reveal": {
+            "type": "string",
+            "title": "🎬 Watch the winner reveal",
+            "description": "An animated, shareable winner reveal — perfect for recording the live draw for your audience.",
+            "template": "https://giveaways-picker.com/reveal?run={{links.apiRunUrl}}"
+        },
         "winners": {
             "type": "string",
             "title": "🏆 Winners",
@@ -11,7 +17,7 @@
         "summary": {
             "type": "string",
             "title": "Run summary",
-            "description": "Winners plus stats: total comments read, how many were eligible after your rules, and the filters applied — proof the draw was fair.",
+            "description": "Winners plus stats: total comments read, how many were eligible, and the filters applied — proof the draw was fair.",
             "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/OUTPUT"
         }
     }

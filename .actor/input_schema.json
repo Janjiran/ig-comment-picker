@@ -23,10 +23,11 @@
         "maxCommentsPerPost": {
             "title": "Max comments per post",
             "type": "integer",
-            "description": "Maximum number of comments to scrape per post URL. Higher values are more thorough but cost slightly more.",
+            "description": "Maximum number of comments to scrape per post URL. Tip: keep this close to how many comments the post actually has — setting it much higher does not find more comments and can make the scraper retry until it gets rate-limited.",
             "editor": "number",
             "default": 100,
             "minimum": 1,
+            "maximum": 1000,
             "unit": "comments"
         },
         "uniqueUsers": {

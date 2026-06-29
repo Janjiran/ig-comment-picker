@@ -66,6 +66,17 @@ That's it - no login to your Instagram account needed.
 - A summary record (`OUTPUT`) with the winners plus useful stats: total comments read,
   how many were eligible after your rules, and the settings used - handy proof that the
   draw was fair.
+- A **🎬 winner reveal link** (in the run's Output tab) that opens an animated, shareable
+  draw on [giveaways-picker.com](https://giveaways-picker.com) using your
+  real results - perfect for recording the moment you pick the winner for your audience.
+
+### 🎬 Interactive winner reveal
+
+Every successful run produces a `reveal` link in the Output tab (also `revealUrl` in the
+`OUTPUT` record). Opening it plays a suspenseful, animated draw that shuffles through the
+real eligible commenters and lands on your actual winner(s) - ideal for going live or
+recording the reveal. The page reads this run's public `OUTPUT` record directly from the
+Apify API, so nothing extra needs to be hosted and no token is exposed.
 
 ## 🤖 Use it with AI assistants (ChatGPT, Claude & others)
 
@@ -131,11 +142,19 @@ slightly from your logged‑in view (some replies/filtered comments may not appe
 
 ## For developers
 
-This is an [Apify Actor](https://apify.com/actors) written in **TypeScript**. It calls
-a dedicated Instagram comment scraper Actor on Apify (configurable via
-`COMMENT_SCRAPER_ACTOR_ID` in `src/main.ts`) to collect comments — with no free-tier
-comment cap — then filters and randomly draws winners. The scraper's output fields are
-normalised, so it works even if the scraper labels comment fields differently.
+This is an [Apify Actor](https://apify.com/actors) written in **TypeScript**. For each
+run it:
+
+1. Reads each post's real comment count via the official `apify/instagram-scraper`
+   (post metadata only — one result per URL) and sizes the scrape to it, so the comment
+   scraper doesn't over-fetch in a loop on small posts.
+2. Calls a dedicated Instagram comment scraper Actor (configurable via
+   `COMMENT_SCRAPER_ACTOR_ID` in `src/main.ts`) to collect comments, capped at
+   `MAX_COMMENTS_PER_POST_LIMIT` (1000) for reliability.
+3. De-duplicates (`dedupeComments`), filters, and randomly draws winners.
+
+The scraper's output fields are normalised, so it works even if the scraper labels
+comment fields differently.
 
 ### Input schema
 
@@ -143,7 +162,7 @@ normalised, so it works even if the scraper labels comment fields differently.
 | --- | --- | --- | --- | --- |
 | `postUrls` | `string[]` | ✅ | - | Instagram post/reel URLs. Comments are pooled across all of them. |
 | `numberOfWinners` | `integer` | ✅ | `1` | How many winners to randomly pick. |
-| `maxCommentsPerPost` | `integer` | - | `100` | Max comments scraped per post. |
+| `maxCommentsPerPost` | `integer` | - | `100` | Max comments scraped per post (1–10,000; the scraper's limit). |
 | `uniqueUsers` | `boolean` | - | `true` | Each username can win at most once (first comment per user is kept). |
 | `requireMention` | `boolean` | - | `false` | Only comments tagging another account (`@someone`) are eligible. |
 | `requiredKeyword` | `string` | - | - | Only comments containing this keyword/hashtag (case‑insensitive) are eligible. |
